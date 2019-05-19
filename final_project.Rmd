@@ -15,4 +15,28 @@ library(tibble)
 library(tidyverse)
 library(askpass)
 library(datasets)
+library(leaflet)
 ```
+
+```{r}
+fiji_map <- leaflet(quakes) %>%
+  addTiles() %>%
+  setView(lng=178.0650, lat=-17.7134, zoom=9)
+fiji_map
+```
+
+
+```{r}
+rce_dist <- fiji_map %>%
+  setView(lng=178.0650, lat=-17.7134, zoom=5) %>%
+  addCircleMarkers(
+    radius = ~ifelse(mag == mag, mag, mag),
+    fillOpacity = 0.5,
+    stroke = FALSE
+  )
+
+rce_dist
+```
+
+
+
