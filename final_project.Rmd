@@ -1,6 +1,5 @@
 ---
 title: "final_project"
-author: "Shashwat Kapoor"
 date: "5/19/2019"
 output: html_document
 ---
