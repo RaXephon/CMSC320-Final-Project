@@ -1,2 +1,4 @@
-# raxephon.github.io
-Final Project for CMSC320
+# Final Project: R Tutorial
+
+## Overview
+This is a demo.
