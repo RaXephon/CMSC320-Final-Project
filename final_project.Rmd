@@ -69,3 +69,10 @@ for (x in seq(1, length(CL))) {
 
 quake_density
 ```
+
+TODO: 
+1. get max/min of lat, log to split the region into four. (sector 1 - 4)
+2. hypothesis (mag sec1 = sec2 = sec3 = sec4)
+3. ANOVA test to see the means of four regions' mag are the same 
+4. conclude with words
+5. map to show the visual result to support our test 
