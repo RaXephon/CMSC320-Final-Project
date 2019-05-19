@@ -25,9 +25,19 @@ fiji_map <- leaflet(quakes) %>%
 fiji_map
 ```
 
+```{r fijiMark}
+
+icons <- awesomeIcons(
+  icon = 'fa-flag',
+  library = 'fa',
+)
+
+rce_dist <- fiji_map %>% addAwesomeMarkers(lng = 178.0650, lat = -17.7134, icon = icons)
+rce_dist
+```
 
 ```{r}
-rce_dist <- fiji_map %>%
+rce_dist <- rce_dist %>%
   setView(lng=178.0650, lat=-17.7134, zoom=5) %>%
   addCircleMarkers(
     radius = ~ifelse(mag == mag, mag, mag),
