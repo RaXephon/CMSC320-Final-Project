@@ -29,7 +29,12 @@ ext_dat <- ext_dat[c(1:7)]
 
 ext_dat
 ```
-```{r map}
+```{r correlation}
+#correlation between depth and magnitude
+
+```
+
+```{r mark Japan for ref}
 icons <- awesomeIcons(
   icon = 'fa-flag',
   library = 'fa',
