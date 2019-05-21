@@ -46,8 +46,8 @@ seasons <- cp %>%
   mutate(spring = ifelse(month >= "03" & month <= "05", as.numeric(mag), NA)) %>% 
   mutate(summer = ifelse(month >= "06" & month <= "08", as.numeric(mag), NA)) %>% 
   mutate(fall = ifelse(month >= "09" & month <= "11", as.numeric(mag), NA)) %>% 
-  mutate(winter = ifelse(month >= "12" || month <= "02", as.numeric(mag), NA)) %>%
-  select(depth, spring, summer, fall, winter)
+  mutate(winter = ifelse(month >= "12" | month <= "02", as.numeric(mag), NA)) %>%
+  select(depth, spring, summer, fall, winter, mag)
 
 season_df <- function(name) {
   filter(seasons, !is.na(seasons[name]))
