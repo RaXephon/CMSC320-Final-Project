@@ -33,7 +33,8 @@ ext_dat$copy <- ext_dat$time
 
 ext_dat <- ext_dat %>%
   separate(copy, sep=" ", into = c("date", "time_in_sec")) %>%
-  separate(date, sep="-", into = c("year", "month", "day"))
+  separate(date, sep="-", into = c("year", "month", "day")) %>%
+  mutate(time=as.Date(time))
 
 ext_dat
 ```
