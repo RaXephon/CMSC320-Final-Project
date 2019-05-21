@@ -40,15 +40,28 @@ ext_dat
 ```
 
 ```{r season}
+
 cp <- ext_dat
+seasons <- cp %>% 
+  mutate(spring = ifelse(month >= "03" & month <= "05", as.numeric(mag), NA)) %>% 
+  mutate(summer = ifelse(month >= "06" & month <= "08", as.numeric(mag), NA)) %>% 
+  mutate(fall = ifelse(month >= "09" & month <= "11", as.numeric(mag), NA)) %>% 
+  mutate(winter = ifelse(month >= "12" || month <= "02", as.numeric(mag), NA)) %>%
+  select(depth, spring, summer, fall, winter)
 
-ext_dat <- cp %>% 
-  mutate(spring = ifelse(month >= "03" & month <= "05", day, NA)) %>% 
-  mutate(summer = ifelse(month >= "06" & month <= "08", day, NA)) %>% 
-  mutate(fall = ifelse(month >= "09" & month <= "11", day, NA)) %>% 
-  mutate(winter = ifelse(month >= "12" || month <= "02", day, NA)) 
+season_df <- function(name) {
+  filter(seasons, !is.na(seasons[name]))
+}
 
-ext_dat
+corr_spring <- cor(season_df("spring")$depth,
+                   season_df("spring")$spring)
+corr_summer <- cor(season_df("summer")$depth,
+                   season_df("summer")$summer)
+corr_fall <- cor(season_df("fall")$depth,
+                 season_df("fall")$fall)
+corr_winter <- cor(season_df("winter")$depth,
+                   season_df("winter")$winter)
+
 ```
 
 ```{r correlation}
