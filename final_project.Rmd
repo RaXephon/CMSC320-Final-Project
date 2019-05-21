@@ -85,49 +85,6 @@ attach(ext_dat)
 abline(lm(depth~mag), col = "red")
 ```
 
-```{python}
-def corr_plot(x, y, groups, xlabel, ylabel, title = "", color = 'blue'):
-    match = groups[x].values.reshape(-1,1) # convert list of matches from 1D -> 2D array
-    
-    # plot our raw data
-    ax = sns.scatterplot(x, y, data = ext_dat, color = color)
-    
-    # Calculate a linear regression model using sci-kit learn
-    regr = linear_model.LinearRegression()
-    regr.fit(match, groups[y])
-    
-    # Predict our data using the linear reg. model
-    pred = regr.predict(match)
-    
-    # Plot the predicted regression data (line)
-    sns.lineplot(groups[x], pred, color="red")
-    
-    # Calculate R^2 value so we can judge the correlation strength
-    r2 = r2_score(groups[y], pred)
-    r = math.sqrt(r2)
-    
-    # Set the axis labels and title
-    title = title + ' (R: %0.3f)' % (r)
-    ax.set(xlabel = xlabel, ylabel = ylabel, title = title)
-
-figure(figsize=(12,12))
-plt.subplots_adjust(hspace=.6, wspace=.4)
-sns.set_context("talk")
-
-# Each group in 'groups' is one participant.
-# We calculate the mean of each participant in order to get an average over all of their dates for that day.
-means = ext_dat.mean()
-
-# Various lists we'll use in a second...
-names = ['mag'] # Name of columns
-expanded_names = ['depth'] # Full names of traits/cols
-
-# For each of our 6 traits, we want to plot the trait data vs their partner's decision to match them (match success)
-    corr_plot('dec_o', names[0], means, 'Match Success', expanded_names[0], "All Participants:")
-    
-plt.show()    
-```
-
 ```{r mark Japan for ref}
 icons <- awesomeIcons(
   icon = 'fa-flag',
