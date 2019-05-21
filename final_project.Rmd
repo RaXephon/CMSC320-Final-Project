@@ -40,33 +40,29 @@ ext_dat
 ```
 
 ```{r season}
-#spring
-cp1 <- ext_dat %>% 
-  filter(month >= "03" & month <= "05") %>%
-  mutate(spring = mag)
+cp <- ext_dat
 
-cp2 <- ext_dat %>% 
-  filter(month >= "06" & month <= "08") %>%
-  mutate(summer = mag)
-
-cp3 <- ext_dat %>% 
-  filter(month >= "09" & month <= "11") %>%
-  mutate(fall = mag)
-
-cp4 <- ext_dat %>% 
-  filter(month >= "12" || month <= "02") %>%
-  mutate(winter = mag)
-
-ext_dat <- cbind(ext_dat, spring = cp1$spring)
+ext_dat <- cp %>% 
+  mutate(spring = ifelse(month >= "03" & month <= "05", mag, NA)) %>% 
+  mutate(summer = ifelse(month >= "06" & month <= "08", mag, NA)) %>% 
+  mutate(fall = ifelse(month >= "09" & month <= "11", mag, NA)) %>% 
+  mutate(winter = ifelse(month >= "12" || month <= "02", mag, NA)) 
 
 ext_dat
 ```
 
 ```{r correlation}
 #correlation between depth and magnitude
-corr <- cor(ext_dat$depth, ext_dat$mag)
+corr_spring <- cor(ext_dat$depth, ext_dat$spring)
+corr_summer <- cor(ext_dat$depth, ext_dat$summer)
+corr_fall <- cor(ext_dat$depth, ext_dat$fall)
+corr_winter <- cor(ext_dat$depth, ext_dat$winter)
 
-corr
+corr_spring
+corr_summer
+corr_fall
+corr_winter
+```
 
 #correlation, r = 0.0570), is less than 0.5, therefore, there is some form of correlation exist.
 #next, look at it in the graph
