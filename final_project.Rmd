@@ -40,10 +40,8 @@ ext_dat
 ```
 
 ```{r season}
-
 cp <- ext_dat
 
-#spring
 ext_dat <- cp %>% 
   mutate(spring = ifelse(month >= "03" & month <= "05", day, NA)) %>% 
   mutate(summer = ifelse(month >= "06" & month <= "08", day, NA)) %>% 
@@ -51,7 +49,6 @@ ext_dat <- cp %>%
   mutate(winter = ifelse(month >= "12" || month <= "02", day, NA)) 
 
 ext_dat
-
 ```
 
 ```{r correlation}
