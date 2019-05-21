@@ -35,7 +35,6 @@ corr <- cor(ext_dat$depth, ext_dat$mag)
 
 corr
 ```
-
 def corr_plot(x, y, groups, xlabel, ylabel, title="", color='blue'):
     match = groups[x].values.reshape(-1,1) # convert list of matches from 1D -> 2D array
     
@@ -59,7 +58,8 @@ def corr_plot(x, y, groups, xlabel, ylabel, title="", color='blue'):
     # Set the axis labels and title
     title = title + ' (R: %0.3f)' % (r)
     ax.set(xlabel=xlabel, ylabel=ylabel, title=title)
-
+    
+    
 ```{r mark Japan for ref}
 icons <- awesomeIcons(
   icon = 'fa-flag',
