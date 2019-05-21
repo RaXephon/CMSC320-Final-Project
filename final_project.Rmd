@@ -18,61 +18,35 @@ library(datasets)
 library(leaflet)
 ```
 
-
-
 ### Working with Maps
 
-```{r fiji_mark}
+```{r read_data}
+dat <- read_csv("Japan_earthquakes.csv")
+
+#tidying data
+ext_dat <- dat[-c(7:13)] 
+ext_dat <- ext_dat[c(1:7)]
+
+ext_dat
+```
+```{r map}
 icons <- awesomeIcons(
   icon = 'fa-flag',
   library = 'fa',
 )
 
-fiji_map <- leaflet(quakes) %>%
+#mark at tokyo
+japan_map <- leaflet(ext_dat) %>%
   addTiles() %>%
-  setView(lng=178.0650, lat=-17.7134, zoom=9) %>%
-  addAwesomeMarkers(lng = 178.0650, lat = -17.7134, icon = icons)
+  setView(lng = 139.80, lat = 35.68, zoom = 6) %>% #tokyo lat, lng
+  addAwesomeMarkers(lng = 139.80, lat = 35.68, icon=icons)
 
-fiji_map
-```
-
-```{r}
-quake_dist <- fiji_map %>%
-  setView(lng=178.0650, lat=-17.7134, zoom=5) %>%
-  addCircleMarkers(
-    radius = ~ifelse(mag == mag, mag, mag),
-    color = "red",
-    fillOpacity = 0.3,
-    stroke = FALSE
-  )
-
-quake_dist
-```
-
-```{r}
-X=cbind(as_tibble(quakes)$long, as_tibble(quakes)$lat)
-kde2d <- bkde2D(X, bandwidth=c(bw.ucv(X[,1]),bw.ucv(X[,2])))
-
-x=kde2d$x1
-y=kde2d$x2
-z=kde2d$fhat
-CL=contourLines(x , y , z)
-
-quake_density <- fiji_map %>%
-  setView(lng=178.0650, lat=-17.7134, zoom=5)
-
-for (x in seq(1, length(CL))) {
-  quake_density <- quake_density %>%
-  addPolylines(CL[[x]]$x, CL[[x]]$y, color = "#8B0000", weight = 2) %>%
-  addPolygons(CL[[x]]$x, CL[[x]]$y, fillColor = "red", stroke = FALSE)
-}
-
-quake_density
+japan_map
 ```
 
 TODO: 
-1. get max/min of lat, log to split the region into four. (sector 1 - 4)
+1. correlation btwn depth and mag
 2. hypothesis (mag sec1 = sec2 = sec3 = sec4)
-3. ANOVA test to see the means of four regions' mag are the same 
+3. ANOVA test to see the means of 'mb' 'mww' 'mwr' of mag are different
 4. conclude with words
 5. map to show the visual result to support our test 
