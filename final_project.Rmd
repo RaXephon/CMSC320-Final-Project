@@ -45,23 +45,10 @@ cp <- ext_dat
 
 #spring
 ext_dat <- cp %>% 
-  filter(month >= "03" & month <= "05") %>%
-  mutate(spring = day) 
-
-#summer
-ext_dat <- cp %>% 
-  filter(month >= "06" & month <= "08") %>%
-  mutate(summer = day)
-
-#fall
-ext_dat <- cp %>% 
-  filter(month >= "09" & month <= "11") %>%
-  mutate(fall = day) 
-
-#winter
-ext_dat <- cp %>% 
-  filter(month >= "12" || month <= "02") %>%
-  mutate(winter = day) 
+  mutate(spring = ifelse(month >= "03" & month <= "05", day, NA)) %>% 
+  mutate(summer = ifelse(month >= "06" & month <= "08", day, NA)) %>% 
+  mutate(fall = ifelse(month >= "09" & month <= "11", day, NA)) %>% 
+  mutate(winter = ifelse(month >= "12" || month <= "02", day, NA)) 
 
 ext_dat
 
