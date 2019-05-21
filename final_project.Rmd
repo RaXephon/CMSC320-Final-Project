@@ -40,31 +40,31 @@ ext_dat
 ```
 
 ```{r season}
-
-cp <- ext_dat
-
 #spring
-ext_dat <- cp %>% 
+cp1 <- ext_dat
+ext_dat <- cp1 %>% 
   filter(month >= "03" & month <= "05") %>%
-  mutate(spring = day) 
+  mutate(spring = mag)
 
 #summer
-ext_dat <- cp %>% 
+cp2 <- ext_dat
+ext_dat <- cp2 %>% 
   filter(month >= "06" & month <= "08") %>%
-  mutate(summer = day)
+  mutate(summer = mag)
 
 #fall
-ext_dat <- cp %>% 
+cp3 <- ext_dat
+ext_dat <- cp3 %>% 
   filter(month >= "09" & month <= "11") %>%
-  mutate(fall = day) 
+  mutate(fall = mag)
 
 #winter
-ext_dat <- cp %>% 
-  filter(month >= "12" || month <= "02") %>%
-  mutate(winter = day) 
+cp4 <- ext_dat
+ext_dat <- cp4 %>% 
+  filter(month == "12" || month <= "02") %>%
+  mutate(winter = mag)
 
 ext_dat
-
 ```
 
 ```{r correlation}
