@@ -43,11 +43,17 @@ ext_dat
 
 cp <- ext_dat
 seasons <- cp %>% 
+  mutate(group = "") %>%
+  mutate(group = ifelse(month >= "03" & month <= "05", "spring", group)) %>% 
+  mutate(group = ifelse(month >= "06" & month <= "08", "summer", group)) %>% 
+  mutate(group = ifelse(month >= "09" & month <= "11", "fall", group)) %>% 
+  mutate(group = ifelse(month >= "12" | month <= "02", "winter", group)) %>%
+  
   mutate(spring = ifelse(month >= "03" & month <= "05", as.numeric(mag), NA)) %>% 
   mutate(summer = ifelse(month >= "06" & month <= "08", as.numeric(mag), NA)) %>% 
   mutate(fall = ifelse(month >= "09" & month <= "11", as.numeric(mag), NA)) %>% 
   mutate(winter = ifelse(month >= "12" | month <= "02", as.numeric(mag), NA)) %>%
-  select(depth, spring, summer, fall, winter, mag)
+  select(depth, spring, summer, fall, winter, mag, group)
 
 season_df <- function(name) {
   filter(seasons, !is.na(seasons[name]))
@@ -62,19 +68,15 @@ corr_fall <- cor(season_df("fall")$depth,
 corr_winter <- cor(season_df("winter")$depth,
                    season_df("winter")$winter)
 
+aov(mag~group, data=seasons)
+aov(depth~group, data=seasons)
+
+# get mean and sd of each group
+group_by(seasons, group)%>% summarise(mean = mean(mag), sd= sd(mag))
 ```
 
-```{r correlation}
-#correlation between depth and magnitude
-corr <- cor(ext_dat$depth, ext_dat$mag)
-
-corr
-
-#correlation, r = 0.0570), is less than 0.5, therefore, there is some form of correlation exist.
-#next, look at it in the graph
-```
 ```{r correlation plot}
-attach(ext_dat)
+attach(seasons)
   plot(mag, depth, main = "Correlation depth vs. magitude",
        xlab = "maginitude", ylab = "depth", pch = 20)
   
@@ -144,3 +146,16 @@ TODO:
 3. ANOVA test to see the means of 'mb' 'mww' 'mwr' of mag are different
 4. conclude with words
 5. map to show the visual result to support our test 
+
+
+so far, we did correlation, r test. that shows there some correlation exist between depth and each season. we found all of seasons have some form of correlation with depth.
+
+---skip for now---
+(now, we see if there is a linear relation btwn them. (Im sure we will find it), so now we can conclude that there is a linear relation exist btwn two. so, we can conclude that as depth goes deeper, the magnitude gets higher. )
+
+now, we want to see if each season has the same mean of magnitude. so we conduct ANOVA test to see it. (hypothesis: all means are the same).
+then derive the conclusion according to the result. 
+(if the null is rejected, then say there are no differences by season, 
+ if not rejected, then we say there are some differences by season)
+
+lastly, show the map of earthquake by seasons.
