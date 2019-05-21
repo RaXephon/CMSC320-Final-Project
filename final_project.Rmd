@@ -16,6 +16,8 @@ library(tidyverse)
 library(askpass)
 library(datasets)
 library(leaflet)
+library(KernSmooth)
+library(sp)
 ```
 
 ### Working with Maps
@@ -92,9 +94,9 @@ japan_map %>%
   addTiles() %>%
   setView(lng = 139.80, lat = 35.68, zoom = 4) %>%
   addCircleMarkers(data=winter, stroke = FALSE, radius = 3, color = "#0080FF", group = "winter") %>%
-  addCircleMarkers(data=spring, stroke = FALSE, radius = 3, color = "green", group = "spring") %>%
+  addCircleMarkers(data=spring, stroke = FALSE, radius = 3, color = "#29AB87", group = "spring") %>%
   addCircleMarkers(data=summer, stroke = FALSE, radius = 3, color = "#999900", group = "summer") %>%
-  addCircleMarkers(data=autumn, stroke = FALSE, radius = 3, color = "red", group = "autumn") %>%
+  addCircleMarkers(data=autumn, stroke = FALSE, radius = 3, color = "#EA3C53", group = "autumn") %>%
   addLayersControl(overlayGroups = c("winter", "spring", "summer", "autumn"),
                     options = layersControlOptions(collapsed = FALSE)) %>%
   hideGroup("spring") %>%
