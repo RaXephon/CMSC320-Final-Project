@@ -41,28 +41,23 @@ ext_dat
 
 ```{r season}
 #spring
-cp1 <- ext_dat
-ext_dat <- cp1 %>% 
+cp1 <- ext_dat %>% 
   filter(month >= "03" & month <= "05") %>%
   mutate(spring = mag)
 
-#summer
-cp2 <- ext_dat
-ext_dat <- cp2 %>% 
+cp2 <- ext_dat %>% 
   filter(month >= "06" & month <= "08") %>%
   mutate(summer = mag)
 
-#fall
-cp3 <- ext_dat
-ext_dat <- cp3 %>% 
+cp3 <- ext_dat %>% 
   filter(month >= "09" & month <= "11") %>%
   mutate(fall = mag)
 
-#winter
-cp4 <- ext_dat
-ext_dat <- cp4 %>% 
-  filter(month == "12" || month <= "02") %>%
+cp4 <- ext_dat %>% 
+  filter(month >= "12" || month <= "02") %>%
   mutate(winter = mag)
+
+ext_dat <- cbind(ext_dat, spring = cp1$spring)
 
 ext_dat
 ```
