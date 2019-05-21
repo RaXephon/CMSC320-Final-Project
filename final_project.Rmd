@@ -75,6 +75,36 @@ japan_map <- leaflet(ext_dat) %>%
 japan_map
 ```
 
+```{r}
+japan_map %>%
+  addCircleMarkers(
+    radius = 3,
+    fillOpacity = 0.5,
+    stroke = FALSE
+  )
+```
+
+```{r}
+X=cbind(ext_dat$longitude,ext_dat$latitude)
+kde2d <- bkde2D(X, bandwidth=c(bw.ucv(X[,1]),bw.ucv(X[,2])))
+
+x=kde2d$x1
+y=kde2d$x2
+z=kde2d$fhat
+CL=contourLines(x , y , z)
+
+quake_density <- japan_map %>%
+  setView(lng = 139.80, lat = 35.68, zoom = 4)
+
+for (x in seq(1, length(CL))) {
+  quake_density <- quake_density %>%
+  addPolylines(CL[[x]]$x, CL[[x]]$y, color = "#8B0000", weight = 2) %>%
+  addPolygons(CL[[x]]$x, CL[[x]]$y, fillColor = "red", stroke = FALSE)
+}
+
+quake_density
+```
+
 TODO: 
 1. correlation btwn depth and mag
 2. hypothesis (mag sec1 = sec2 = sec3 = sec4)
