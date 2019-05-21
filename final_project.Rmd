@@ -29,17 +29,37 @@ ext_dat <- ext_dat[c(1:7)]
 
 ext_dat
 ```
+
+```{r}
+ext_dat <- ext_dat %>%
+   as.Date(time, tz = "", format, tryFormats = c("%Y-%m-%d %H:%M:%OS"))
+```
+
+
 ```{r correlation}
 #correlation between depth and magnitude
 corr <- cor(ext_dat$depth, ext_dat$mag)
 
 corr
+
+#correlation, r = 0.0570), is less than 0.5, therefore, there is some form of correlation exist.
+#next, look at it in the graph
 ```
-def corr_plot(x, y, groups, xlabel, ylabel, title="", color='blue'):
+```{r correlation plot}
+attach(ext_dat)
+  plot(mag, depth, main = "Correlation depth vs. magitude",
+       xlab = "maginitude", ylab = "depth", pch = 20)
+  
+  #add linear line
+abline(lm(depth~mag), col = "red")
+```
+
+```{python}
+def corr_plot(x, y, groups, xlabel, ylabel, title = "", color = 'blue'):
     match = groups[x].values.reshape(-1,1) # convert list of matches from 1D -> 2D array
     
     # plot our raw data
-    ax = sns.scatterplot(x, y, data=groups, color=color)
+    ax = sns.scatterplot(x, y, data = ext_dat, color = color)
     
     # Calculate a linear regression model using sci-kit learn
     regr = linear_model.LinearRegression()
@@ -57,9 +77,26 @@ def corr_plot(x, y, groups, xlabel, ylabel, title="", color='blue'):
     
     # Set the axis labels and title
     title = title + ' (R: %0.3f)' % (r)
-    ax.set(xlabel=xlabel, ylabel=ylabel, title=title)
+    ax.set(xlabel = xlabel, ylabel = ylabel, title = title)
+
+figure(figsize=(12,12))
+plt.subplots_adjust(hspace=.6, wspace=.4)
+sns.set_context("talk")
+
+# Each group in 'groups' is one participant.
+# We calculate the mean of each participant in order to get an average over all of their dates for that day.
+means = ext_dat.mean()
+
+# Various lists we'll use in a second...
+names = ['mag'] # Name of columns
+expanded_names = ['depth'] # Full names of traits/cols
+
+# For each of our 6 traits, we want to plot the trait data vs their partner's decision to match them (match success)
+    corr_plot('dec_o', names[0], means, 'Match Success', expanded_names[0], "All Participants:")
     
-    
+plt.show()    
+```
+
 ```{r mark Japan for ref}
 icons <- awesomeIcons(
   icon = 'fa-flag',
