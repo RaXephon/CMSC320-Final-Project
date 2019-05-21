@@ -47,6 +47,15 @@ japan_map
 ```
 
 ```{r}
+japan_map %>%
+  addCircleMarkers(
+    radius = 3,
+    fillOpacity = 0.5,
+    stroke = FALSE
+  )
+```
+
+```{r}
 X=cbind(ext_dat$longitude,ext_dat$latitude)
 kde2d <- bkde2D(X, bandwidth=c(bw.ucv(X[,1]),bw.ucv(X[,2])))
 
