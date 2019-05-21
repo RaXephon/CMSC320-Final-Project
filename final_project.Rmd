@@ -27,8 +27,15 @@ dat <- read_csv("Japan_earthquakes.csv")
 ext_dat <- dat[-c(7:13)] 
 ext_dat <- ext_dat[c(1:7)]
 
+ext_dat$copy <- ext_dat$time
+
+ext_dat <- ext_dat %>%
+  separate(copy, sep=" ", into = c("date", "time_in_sec")) %>%
+  separate(date, sep="-", into = c("year", "month", "day"))
+
 ext_dat
 ```
+
 ```{r correlation}
 #correlation between depth and magnitude
 corr <- cor(ext_dat$depth, ext_dat$mag)
@@ -76,12 +83,23 @@ japan_map
 ```
 
 ```{r}
+winter <- ext_dat[ext_dat$month %in% c("01", "02", "12"), ]
+spring <- ext_dat[ext_dat$month %in% c("03", "04", "05"), ]
+summer <- ext_dat[ext_dat$month %in% c("06", "07", "08"), ]
+autumn <- ext_dat[ext_dat$month %in% c("09", "10", "11"), ]
+
 japan_map %>%
-  addCircleMarkers(
-    radius = 3,
-    fillOpacity = 0.5,
-    stroke = FALSE
-  )
+  addTiles() %>%
+  setView(lng = 139.80, lat = 35.68, zoom = 4) %>%
+  addCircleMarkers(data=winter, stroke = FALSE, radius = 3, color = "#0080FF", group = "winter") %>%
+  addCircleMarkers(data=spring, stroke = FALSE, radius = 3, color = "green", group = "spring") %>%
+  addCircleMarkers(data=summer, stroke = FALSE, radius = 3, color = "#999900", group = "summer") %>%
+  addCircleMarkers(data=autumn, stroke = FALSE, radius = 3, color = "red", group = "autumn") %>%
+  addLayersControl(overlayGroups = c("winter", "spring", "summer", "autumn"),
+                    options = layersControlOptions(collapsed = FALSE)) %>%
+  hideGroup("spring") %>%
+  hideGroup("summer") %>%
+  hideGroup("autumn")
 ```
 
 ```{r}
