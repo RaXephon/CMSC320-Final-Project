@@ -90,8 +90,7 @@ attach(seasons)
   plot(mag, depth, main = "Correlation depth vs. magitude",
        xlab = "maginitude", ylab = "depth", pch = 20)
   
-  #add linear line
-abline(lm(depth~mag), col = "red")
+ 
 ```
 
 ```{r mark Japan for ref}
