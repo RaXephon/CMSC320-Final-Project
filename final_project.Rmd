@@ -83,24 +83,16 @@ mutate(ext_dat, seasons = ifelse(month >= "03" & month <= "05", "spring",
                    ifelse(month >= "06" & month <= "08", "summer", 
                    ifelse(month >= "09" & month <= "11", "fall", "winter"))))
 ```
-```{r dummy forcategorical variable}
-mutate(ext_dat, spring = ifelse(seasons == "spring", 1, 0))
-  
-```
 
 ```{r correlation}
 #correlation between depth and magnitude
-corr_spring <- cor(season_df("spring")$depth,
-                   season_df("spring")$spring)
-corr_summer <- cor(season_df("summer")$depth,
-                   season_df("summer")$summer)
-corr_fall <- cor(season_df("fall")$depth,
-                 season_df("fall")$fall)
-corr_winter <- cor(season_df("winter")$depth,
-                   season_df("winter")$winter)
+corr_spring <- ext_dat %>% 
+  cor(depth, seasons == "spring")
 
-aov(mag~group, data=seasons)
-aov(depth~group, data=seasons)
+corr_spring
+
+aov(mag~group, data = seasons)
+aov(depth~group, data = seasons)
 
 # get mean and sd of each group
 group_by(seasons, group)%>% summarise(mean = mean(mag), sd= sd(mag))
@@ -110,8 +102,6 @@ group_by(seasons, group)%>% summarise(mean = mean(mag), sd= sd(mag))
 attach(seasons)
   plot(mag, depth, main = "Correlation depth vs. magitude",
        xlab = "maginitude", ylab = "depth", pch = 20)
-  
- 
 ```
 
 ```{r mark Japan for ref}
