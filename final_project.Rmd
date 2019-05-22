@@ -65,7 +65,7 @@ ext_dat$copy <- ext_dat$time
 
 ext_dat <- ext_dat %>%
   separate(copy, sep=" ", into = c("date", "time_in_sec")) %>%
-  separate(date, sep="-", into = c("year", "month", "day")) 
+  separate(date, sep="-", into = c("year", "month", "day"))
 ext_dat
 ```
 
@@ -133,13 +133,15 @@ attach(corr_fall)
 plot(fall_mag, fall_depth, main = "Correlation  fall", pch = 19)
 
 attach(corr_winter)
-plot(winter_mag, winter_depth, main = "Correlation  winter", pch = 19)
+plot(winter_depth, winter_mag, main = "Correlation  winter", pch = 19)
+
+attach(ext_dat)
+plot(depth, mag, main = "mag vs depth", pch = 19)
 ```
 
 TODO
 #graphs how non-linear
 #tranform it to be linear
-```
 
 ```{r ANOVA}
 
