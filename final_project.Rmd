@@ -16,6 +16,16 @@ V. Conclusion
 
 ####II. Problem
 
+As the name implies, natural disasters occur from events in nature and are beyond human control. While it is impossible for humans to directly prevent the course of Mother Nature, we can still analyze the patterns of natural events and their implications. 
+
+Of these, earthquakes are some of the most diverse in their effects. From undetectable tectonic plate movements to disasters with body counts in the thousands, earthquakes leave equal amounts of material to study and motive to do so.
+
+If the government knew that a particular area was prone to earthquakes, they could avoid putting a housing complex there, preventing future tragedies. If tourists knew seismic seasonal trends would spike in their destination, they might choose a different vacation spot. 
+
+As the above examples illustrate, decisions may be on a national or personal level or anywhere in between. Both, however, were fueled by public research based on data analysis.
+
+For our tutorial, we decided to use a dataset on earthquakes near Japan.
+
 ####III. Data
 
 **Including Libraries**
