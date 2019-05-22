@@ -62,10 +62,9 @@ Notice that the `time` column has a large amount of information, but none of it 
 ```{r}
 options(dplyr.width = Inf)
 ext_dat$copy <- ext_dat$time
-
 ext_dat <- ext_dat %>%
   separate(copy, sep=" ", into = c("date", "time_in_sec")) %>%
-  separate(date, sep="-", into = c("year", "month", "day"))
+  separate(date, sep="-", into = c("year", "month", "day")) 
 ext_dat
 ```
 
@@ -73,47 +72,46 @@ We can now take the original time column and transform it into a column of the `
 ```{r}
 ext_dat <- ext_dat %>%
   mutate(time=as.Date(time))
-
 colnames(ext_dat)[colnames(ext_dat) == "time"] <- "date"
-
 ext_dat
 ```
 
 
 ####IV-i. Analysis -- Statistical
+Now that we have created a useful dataframe from our csv file, the next step is to draw conclusions from the data. One way to do this is to run various statistical analyses.
 
-####IV-ii. Analysis -- Visual
+One option we might consider is looking at earthquakes via the seasons during which they occur.
+First, we need to find a way to represent seasons. This can be done by (crudely) breaking the seasons into three month chunks.
 
-
+Note we will use the `month` column that we created while tidying the data. 
 
 ```{r create season}
 #separate seasons according to conditions
 ext_dat <- mutate(ext_dat, seasons = ifelse(month >= "03" & month <= "05", "spring",
                    ifelse(month >= "06" & month <= "08", "summer", 
                    ifelse(month >= "09" & month <= "11", "fall", "winter"))))
+ext_dat
 ```
+
+Now that we have the seasons, we can look at the correlation between an earthquake's depth and its season. We will do this using a correlation matrix. A correlation matrix is a table showing correlation coefficients between sets of variables. Each entry in the table is the random variable's correlation with each of the other values in the table. This allows you to see which pairs have the highest correlation.
 
 ```{r cor btwn depth and each season}
 corr_spring <- ext_dat %>%
   filter(seasons == "spring") %>% 
   mutate(spring_depth = depth, spring_mag = mag) %>%
   select(spring_depth, spring_mag)
-
 corr_summer <- ext_dat %>%
   filter(seasons == "summer") %>% 
   mutate(summer_depth = depth, summer_mag = mag) %>%
   select(summer_depth, summer_mag)
-
 corr_fall <- ext_dat %>%
   filter(seasons == "fall") %>% 
   mutate(fall_depth = depth, fall_mag = mag) %>% 
   select(fall_depth, fall_mag)
-
 corr_winter <- ext_dat %>%
   filter(seasons == "winter") %>% 
   mutate(winter_depth = depth, winter_mag = mag)%>%
   select(winter_depth, winter_mag)
-
 #all seasons' p-value < 0.5 and therefore, their some form of correlation exist
 cor(corr_spring)
 cor(corr_summer)
@@ -121,53 +119,77 @@ cor(corr_fall)
 cor(corr_winter)
 ```
 
+The entries for (season_depth, season_mag) are called p-values. To generalize, the smaller a p-value is, the more correlated the two variables are. We will hold our threshold as p < 0.05, indicating that there is a less than 1 in 20 chance of being wrong. As the correlation table shows, spring and winter have a high correlation with depth, while summer and fall are less significant.
+
+While it is nice to know this data, it would also be nice to have a visual representation of this.
+
+
 ```{r plotting}
 #show in plots what kind of relation it has
 attach(corr_spring)
 plot(spring_mag, spring_depth, main = "Correlation  Spring", pch = 19)
-
 attach(corr_summer)
 plot(summer_mag, summer_depth, main = "Correlation  summer", pch = 19)
-
 attach(corr_fall)
 plot(fall_mag, fall_depth, main = "Correlation  fall", pch = 19)
-
 attach(corr_winter)
-plot(winter_depth, winter_mag, main = "Correlation  winter", pch = 19)
-
+plot(winter_mag, winter_depth, main = "Correlation  winter", pch = 19)
 attach(ext_dat)
 plot(depth, mag, main = "mag vs depth", pch = 19)
 ```
 
-TODO
-#graphs how non-linear
-#tranform it to be linear
+####IV-ii. Analysis -- Visual
+Now that we have performed statistical analyses, we would like to present more compelling information in the form of interactive maps. 
 
-```{r ANOVA}
+First, let's practice handling maps.
 
-```
+We will install icons using the awesomeIcons function. In this example, we chose a flag.
 
 ```{r mark Japan for ref}
 icons <- awesomeIcons(
   icon = 'fa-flag',
   library = 'fa'
 )
+```
 
-#mark at tokyo
+Next, we  will put this icon on a map of Japan. Specifically, we want to put it at Tokyo.
+
+A quick search will reveal Tokyo's coordinates to be 35.6762° N, 139.6503° E.
+
+Now we will use `leaflet`, a Javascript library for interactive maps integrated into R. 
+First we create a map widget by calling leaflet(). From there, we can simply add layers. In this introductory example, we first call addTiles() for a base layer before using addAwesomeMarkers() with Tokyo's coordinates to pin the icon we initialized in the previous code block. Finally, we use setView() to determine the area displayed by default.
+```{r}
 japan_map <- leaflet(ext_dat) %>%
   addTiles() %>%
-  setView(lng = 139.80, lat = 35.68, zoom = 6) %>% #tokyo lat, lng
-  addAwesomeMarkers(lng = 139.80, lat = 35.68, icon=icons)
-
+  addAwesomeMarkers(lng = 139.80, lat = 35.68, icon=icons) %>%
+  setView(lng = 139.80, lat = 35.68, zoom = 6) #tokyo lat, lng
+  
 japan_map
 ```
 
+This was a fun introduction but it doesn't show anything useful regarding earthquakes yet.
+
+For this next example, we want to plot out earthquakes per season.
+
+We previously created a seasons column, but another way to parse seasonal data is to split the dataframe altogether into four dataframes, one for each season. 
 ```{r}
 winter <- ext_dat[ext_dat$month %in% c("01", "02", "12"), ]
 spring <- ext_dat[ext_dat$month %in% c("03", "04", "05"), ]
 summer <- ext_dat[ext_dat$month %in% c("06", "07", "08"), ]
 autumn <- ext_dat[ext_dat$month %in% c("09", "10", "11"), ]
+```
 
+Now we want to plot this by seasons. 
+
+We would still like to setView() to Tokyo, but we call three new functions in this example.
+First, `addCircleMarkers()`. This will plot a circle of the given specifications (radius, color, etc) at the points in the given dataframe. Two things to note here are that we chose different colors for different seasons and that there is a small 'group = "[season]"' field at the end. This will come in useful for the next two functions, but the effect essentially ties the layer to a group. 
+Next we see `addLayersControl()`. This will create a box at the top righthand corner with the checkboxes per season. Two options are available for addLayersControl():baseGroups and overlayGroups. For baseGroups, the user can only view one group at a time as only one base can be displayed. OverlayGroups, however, can be overlapped over each other. Anywhere from none to all layers can be shown together. For our purposes, overlayGroups was more apt; we wanted users to be able to use the plot flexibly, like laying two seasons' events on top of each other and comparing them directly.
+Finally, we have `hideGroup()`. As its name implies, this function hides groups from the default selection. We decided that having all the seasons selected as default was a little overwhelming and cluttered, so one season (winter) was defined as the automatic selection.
+
+Finally, these functions are all put together in thecode below.
+
+(Note that we already created a map widget `japan_map` so we don't need to call leaflet() again.)
+```{r}
 japan_map %>%
   addTiles() %>%
   setView(lng = 139.80, lat = 35.68, zoom = 4) %>%
@@ -182,24 +204,44 @@ japan_map %>%
   hideGroup("autumn")
 ```
 
+This was a good exercise for getting familiar with the layering possibilities of leaflet, but there are still many more possibilities with leaflet, especially as far as earthquakes are concerned.
+
+One method we can use is a heatmap.
+First, we'd like to link respective latitudes and longitudes to each other again to create a dataframe of plotpoints.
 ```{r}
-X=cbind(ext_dat$longitude,ext_dat$latitude)
-kde2d <- bkde2D(X, bandwidth=c(bw.ucv(X[,1]),bw.ucv(X[,2])))
+X = cbind(ext_dat$longitude, ext_dat$latitude)
+head(X, n = 10)
+```
 
-x=kde2d$x1
-y=kde2d$x2
-z=kde2d$fhat
-CL=contourLines(x , y , z)
+Now our goal is to get the intensity at each of these plot points. To do this, we introduce bkde2D, which computes a **b**inned **k**ernel **d**ensity **e**stimate in **2D**. Essentially, this stretches the dataframe of plot points in each direction to find density estimates using the overlaps of plot points. It will return these in the form of a matrix.
 
+**Explain bw.ucv and bandwidth**
+
+We take the returned dataframe and input it into the function `contourLines()`, which will calculate lines connecting points of equal intensity on the heatmap.
+```{r, warning=FALSE}
+kde2d <- bkde2D(X, bandwidth = c(bw.ucv(X[,1]),bw.ucv(X[,2])))
+
+x = kde2d$x1
+y = kde2d$x2
+z = kde2d$fhat
+
+CL = contourLines(x , y , z)
+```
+
+Now that we have calculated the most important component, we will begin to actually plot out the heatmap. 
+As before, we will use the initialized map widget `japan_map` and set the default view to Tokyo.
+```{r}
 quake_density <- japan_map %>%
   setView(lng = 139.80, lat = 35.68, zoom = 4)
+```
 
+The crucial part of this example concerns the CL or contourLines. We use a for loop that traverses the entire contourLines dataframe, calling `addPolylines` and `addPolygons` to plot. This essentially goes through each level of earthquake density and adds more layers of red for each successive level. 
+```{r}
 for (x in seq(1, length(CL))) {
   quake_density <- quake_density %>%
   addPolylines(CL[[x]]$x, CL[[x]]$y, color = "#8B0000", weight = 2) %>%
   addPolygons(CL[[x]]$x, CL[[x]]$y, fillColor = "red", stroke = FALSE)
 }
-
 quake_density
 ```
 
