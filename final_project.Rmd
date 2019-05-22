@@ -1,12 +1,24 @@
 ---
-title: "CMSC320 Final Project"
-date: "5/19/2019"
 name: "Shashwat Kapoor, Jin Ah Kang, Theresa Choi"
 output: html_document
 ---
+##Table of Contents
+I. Introduction
+II. Problem
+III. Data
+IV. Analysis
+  i. Statistical
+  ii. Visual
+V. Conclusion
 
-## Library
 
+####I. Introduction
+
+####II. Problem
+
+####III. Data
+
+**Including Libraries**
 ```{r setup, message=FALSE, warning=FALSE}
 library(tidyr)
 library(dplyr)
@@ -20,24 +32,47 @@ library(KernSmooth)
 library(sp)
 ```
 
-### Working with Maps
+**Data Scraping/Tidying**
 
-```{r read_data}
+First we want to gather the raw data from our dataset. In this case, we can simply read it from a csv datatype using the function `read_csv`. 
+```{r read_data, warning=FALSE, message=FALSE}
 dat <- read_csv("Japan_earthquakes.csv")
+```
 
-#tidying data
-ext_dat <- dat[-c(7:13)] 
-ext_dat <- ext_dat[c(1:7)]
+Next, we select the columns that we are interested in. For our purposes, we only need `time`, `latitude`, `longitude`, `depth`, `mag`, `magType`, and `place`.
+```{r}
+ext_dat <- dat %>%
+  select("time", "latitude", "longitude", "depth", "mag", "magType", "place")
+ext_dat
+```
 
+Notice that the `time` column has a large amount of information, but none of it is currently easily accessible. We can break down this compact form into more columns. First we will make a copy of the `time` column, so we can parse each into time and date separately. To do this, we separate the date and the time via the delimiter " ". We do the same for the time, separating out `year`, `month`, and `day`.
+```{r}
+options(dplyr.width = Inf)
 ext_dat$copy <- ext_dat$time
 
 ext_dat <- ext_dat %>%
   separate(copy, sep=" ", into = c("date", "time_in_sec")) %>%
-  separate(date, sep="-", into = c("year", "month", "day")) %>%
+  separate(date, sep="-", into = c("year", "month", "day")) 
+ext_dat
+```
+
+We can now take the original time column and transform it into a column of the `date` type, allowing R to perform date-specific computations on it. (We will additionally rename the date column from `time` to `date` to prevent confusion.)
+```{r}
+ext_dat <- ext_dat %>%
   mutate(time=as.Date(time))
+
+colnames(ext_dat)[colnames(ext_dat) == "time"] <- "date"
 
 ext_dat
 ```
+
+
+####IV-i. Analysis -- Statistical
+
+####IV-ii. Analysis -- Visual
+
+
 
 ```{r season}
 cp <- ext_dat
@@ -96,7 +131,7 @@ attach(seasons)
 ```{r mark Japan for ref}
 icons <- awesomeIcons(
   icon = 'fa-flag',
-  library = 'fa',
+  library = 'fa'
 )
 
 #mark at tokyo
@@ -148,6 +183,10 @@ for (x in seq(1, length(CL))) {
 
 quake_density
 ```
+
+
+####V. Conclusion
+
 
 TODO: 
 1. correlation btwn depth and mag
