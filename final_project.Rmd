@@ -4,11 +4,17 @@ output: html_document
 ---
 ##Table of Contents
 I. Introduction
+
 II. Problem
+
 III. Data
+
 IV. Analysis
+
   i. Statistical
+
   ii. Visual
+
 V. Conclusion
 
 
@@ -134,9 +140,17 @@ attach(corr_fall)
 plot(fall_mag, fall_depth, main = "Correlation  fall", pch = 19)
 attach(corr_winter)
 plot(winter_mag, winter_depth, main = "Correlation  winter", pch = 19)
+```
+
+While analyzing earthquakes by season was a good exercise in data mutation and correlation testing, it didn't turn out to be very useful. Instead we will try another analysis on magnitude that will hopefully yield more useful findings. To do this, we turn to the `mag` and `depth` columns. 
+
+Researchers have found that stronger earthquakes occur at shallower depths, while small earthquakes tend to range more in their depths. For further discussion, interested readers may find [this link](https://www.openhazards.com/faq/earthquakes-faults-plate-tectonics-earth-structure-user-submitted-questions/there-correlation) helpful.
+
+```{r, message=FALSE, warning=FALSE}
 attach(ext_dat)
 plot(depth, mag, main = "mag vs depth", pch = 19)
 ```
+Our plot fits the hypothesis perfectly. Earthquakes with the most magnitude are clustered at shallower depths while shorter earthquakes roam more freely, though there seems to be a slight cluster at the [300,500] range.
 
 ####IV-ii. Analysis -- Visual
 Now that we have performed statistical analyses, we would like to present more compelling information in the form of interactive maps. 
