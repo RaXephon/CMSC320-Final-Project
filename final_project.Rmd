@@ -123,7 +123,16 @@ cor(corr_winter)
 
 ```{r plotting}
 attach(corr_spring)
-plot(spring_mag, spring_depth, main = "Correlation  Spring", pch = 19)
+plot(spring_mag, spring_depth, main = "Correlation  Spring", pch = 20)
+
+attach(corr_summer)
+plot(summer_mag, summer_depth, main = "Correlation  summer", pch = 20)
+
+attach(corr_fall)
+plot(fall_mag, fall_depth, main = "Correlation  fall", pch = 20)
+
+attach(corr_winter)
+plot(winter_mag, winter_depth, main = "Correlation  winter", pch = 20)
 ```
 
 ```{r mark Japan for ref}
