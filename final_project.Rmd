@@ -30,6 +30,7 @@ library(datasets)
 library(leaflet)
 library(KernSmooth)
 library(sp)
+library(dummies)
 ```
 
 **Data Scraping/Tidying**
@@ -75,31 +76,16 @@ ext_dat
 
 
 ```{r season}
+#separate seasons according to conditions
 cp <- ext_dat
   
 mutate(ext_dat, seasons = ifelse(month >= "03" & month <= "05", "spring",
                    ifelse(month >= "06" & month <= "08", "summer", 
-                   ifelse(month >= "09" & month <= "11", "fall", "winter")))
+                   ifelse(month >= "09" & month <= "11", "fall", "winter"))))
 ```
-
-
-cp <- ext_dat
-seasons <- cp %>% 
-  mutate(group = "") %>%
-  mutate(group = ifelse(month >= "03" & month <= "05", "spring", group)) %>% 
-  mutate(group = ifelse(month >= "06" & month <= "08", "summer", group)) %>% 
-  mutate(group = ifelse(month >= "09" & month <= "11", "fall", group)) %>% 
-  mutate(group = ifelse(month >= "12" | month <= "02", "winter", group)) %>%
+```{r dummy forcategorical variable}
+mutate(ext_dat, spring = ifelse(seasons == "spring", 1, 0))
   
-  mutate(spring = ifelse(month >= "03" & month <= "05", as.numeric(mag), NA)) %>% 
-  mutate(summer = ifelse(month >= "06" & month <= "08", as.numeric(mag), NA)) %>% 
-  mutate(fall = ifelse(month >= "09" & month <= "11", as.numeric(mag), NA)) %>% 
-  mutate(winter = ifelse(month >= "12" | month <= "02", as.numeric(mag), NA)) %>%
-  select(depth, spring, summer, fall, winter, mag, group)
-
-season_df <- function(name) {
-  filter(seasons, !is.na(seasons[name]))
-}
 ```
 
 ```{r correlation}
