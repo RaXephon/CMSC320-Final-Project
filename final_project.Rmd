@@ -122,17 +122,27 @@ cor(corr_winter)
 ```
 
 ```{r plotting}
+#show in plots what kind of relation it has
 attach(corr_spring)
-plot(spring_mag, spring_depth, main = "Correlation  Spring", pch = 20)
+plot(spring_mag, spring_depth, main = "Correlation  Spring", pch = 19)
 
 attach(corr_summer)
-plot(summer_mag, summer_depth, main = "Correlation  summer", pch = 20)
+plot(summer_mag, summer_depth, main = "Correlation  summer", pch = 19)
 
 attach(corr_fall)
-plot(fall_mag, fall_depth, main = "Correlation  fall", pch = 20)
+plot(fall_mag, fall_depth, main = "Correlation  fall", pch = 19)
 
 attach(corr_winter)
-plot(winter_mag, winter_depth, main = "Correlation  winter", pch = 20)
+plot(winter_mag, winter_depth, main = "Correlation  winter", pch = 19)
+```
+
+TODO
+#graphs how non-linear
+#tranform it to be linear
+```
+
+```{r ANOVA}
+
 ```
 
 ```{r mark Japan for ref}
