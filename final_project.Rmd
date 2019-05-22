@@ -24,7 +24,7 @@ If the government knew that a particular area was prone to earthquakes, they cou
 
 As the above examples illustrate, decisions may be on a national or personal level or anywhere in between. Both, however, were fueled by public research based on data analysis.
 
-For our tutorial, we decided to use a dataset on earthquakes near Japan.
+For our tutorial, we decided to use a dataset on earthquakes near Japan. As one of the countries most affected by earthquakes, Japan experiences around 1,500 earthquakes every year. This made it a prime sample set.
 
 ####III. Data
 
