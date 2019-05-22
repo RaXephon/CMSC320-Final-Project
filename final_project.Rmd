@@ -41,6 +41,7 @@ library(leaflet)
 library(KernSmooth)
 library(sp)
 library(dummies)
+library(Hmisc)
 ```
 
 **Data Scraping/Tidying**
@@ -87,19 +88,70 @@ ext_dat
 
 ```{r season}
 #separate seasons according to conditions
-cp <- ext_dat
-  
-mutate(ext_dat, seasons = ifelse(month >= "03" & month <= "05", "spring",
+ext_dat <- mutate(ext_dat, seasons = ifelse(month >= "03" & month <= "05", "spring",
                    ifelse(month >= "06" & month <= "08", "summer", 
                    ifelse(month >= "09" & month <= "11", "fall", "winter"))))
 ```
 
+```{r cor for numeric data}
+cp <- ext_dat[c(2:5)]
+
+cp.cor = cor(cp)
+
+
+corr_spring <- ext_dat %>%
+  filter(seasons == "spring") %>% 
+  mutate(spring_depth = depth, spring_mag = mag) %>%
+  select(spring_depth, spring_mag)
+
+corr_summer <- ext_dat %>%
+  filter(seasons == "summer") %>% 
+  mutate(summer_depth = depth, summer_mag = mag) %>%
+  select(summer_depth, summer_mag)
+
+corr_fall <- ext_dat %>%
+  filter(seasons == "fall") %>% 
+  mutate(fall_depth = depth, fall_mag = mag) %>% 
+  select(fall_depth, fall_mag)
+
+corr_winter <- ext_dat %>%
+  filter(seasons == "winter") %>% 
+  mutate(winter_depth = depth, winter_mag = mag)%>%
+  select(winter_depth, winter_mag)
+
+#all seasons' p-value < 0.5 and therefore, their some form of correlation exist
+cor(corr_spring)
+cor(corr_summer)
+cor(corr_fall)
+cor(corr_winter)
+```
+
+```{r plotting}
+attach(corr_spring)
+plot(spring_mag, spring_depth, main = "Correlation  Spring", pch = 19)
+```
+
+
+
 ```{r correlation}
 #correlation between depth and magnitude
 corr_spring <- ext_dat %>% 
-  cor(depth, seasons == "spring")
+  filter(seasons == "spring") %>%
+  cor(depth, mag, use = "complete.obs")
 
-corr_spring
+corr_spring <- ext_dat %>% 
+  filter(seasons == "summer") %>%
+  cor(depth, mag)
+
+corr_spring <- ext_dat %>% 
+  filter(seasons == "fall") %>%
+  cor(depth, mag)
+
+corr_spring <- ext_dat %>% 
+  filter(seasons == "winter") %>%
+  cor(depth, mag)
+
+```
 
 aov(mag~group, data = seasons)
 aov(depth~group, data = seasons)
