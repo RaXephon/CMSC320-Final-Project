@@ -86,19 +86,14 @@ ext_dat
 
 
 
-```{r season}
+```{r create season}
 #separate seasons according to conditions
 ext_dat <- mutate(ext_dat, seasons = ifelse(month >= "03" & month <= "05", "spring",
                    ifelse(month >= "06" & month <= "08", "summer", 
                    ifelse(month >= "09" & month <= "11", "fall", "winter"))))
 ```
 
-```{r cor for numeric data}
-cp <- ext_dat[c(2:5)]
-
-cp.cor = cor(cp)
-
-
+```{r cor btwn depth and each season}
 corr_spring <- ext_dat %>%
   filter(seasons == "spring") %>% 
   mutate(spring_depth = depth, spring_mag = mag) %>%
@@ -129,41 +124,6 @@ cor(corr_winter)
 ```{r plotting}
 attach(corr_spring)
 plot(spring_mag, spring_depth, main = "Correlation  Spring", pch = 19)
-```
-
-
-
-```{r correlation}
-#correlation between depth and magnitude
-corr_spring <- ext_dat %>% 
-  filter(seasons == "spring") %>%
-  cor(depth, mag, use = "complete.obs")
-
-corr_spring <- ext_dat %>% 
-  filter(seasons == "summer") %>%
-  cor(depth, mag)
-
-corr_spring <- ext_dat %>% 
-  filter(seasons == "fall") %>%
-  cor(depth, mag)
-
-corr_spring <- ext_dat %>% 
-  filter(seasons == "winter") %>%
-  cor(depth, mag)
-
-```
-
-aov(mag~group, data = seasons)
-aov(depth~group, data = seasons)
-
-# get mean and sd of each group
-group_by(seasons, group)%>% summarise(mean = mean(mag), sd= sd(mag))
-```
-
-```{r correlation plot}
-attach(seasons)
-  plot(mag, depth, main = "Correlation depth vs. magitude",
-       xlab = "maginitude", ylab = "depth", pch = 20)
 ```
 
 ```{r mark Japan for ref}
