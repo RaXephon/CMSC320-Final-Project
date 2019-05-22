@@ -141,7 +141,7 @@ plot(winter_mag, winter_depth, main = "Correlation  winter", pch = 19)
 While the correlations are nonlinear, we can see a slight pattern across seasons; only the relatively shallow depths seem to extend into the higher magnitude earthquakes. With the exception of summer, most earthquakes above magnitude 7 are above 300 feet deep. 
 
 
-While this was a good exercise in data mutation and correlation testing, it didn't lead to a clear conclusion. We will try another analysis on magnitude that will hopefully yield more declarative findings. To do this, we turn to the `mag` and `depth` columns. 
+While this was a good exercise in data mutation and correlation testing, it didn't lead to a clear conclusion. We will try another analysis on magnitude that will hopefully yield more declarative findings. 
 
 Researchers have found that stronger earthquakes occur at shallower depths, while small earthquakes tend to range more in their depths. For further discussion, interested readers may find [this link](https://www.openhazards.com/faq/earthquakes-faults-plate-tectonics-earth-structure-user-submitted-questions/there-correlation) helpful.
 
@@ -196,11 +196,14 @@ autumn <- ext_dat[ext_dat$month %in% c("09", "10", "11"), ]
 Now we want to plot this by seasons. 
 
 We would still like to setView() to Tokyo, but we call three new functions in this example.
+
 First, `addCircleMarkers()`. This will plot a circle of the given specifications (radius, color, etc) at the points in the given dataframe. Two things to note here are that we chose different colors for different seasons and that there is a small 'group = "[season]"' field at the end. This will come in useful for the next two functions, but the effect essentially ties the layer to a group. 
+
 Next we see `addLayersControl()`. This will create a box at the top righthand corner with the checkboxes per season. Two options are available for addLayersControl():baseGroups and overlayGroups. For baseGroups, the user can only view one group at a time as only one base can be displayed. OverlayGroups, however, can be overlapped over each other. Anywhere from none to all layers can be shown together. For our purposes, overlayGroups was more apt; we wanted users to be able to use the plot flexibly, like laying two seasons' events on top of each other and comparing them directly.
+
 Finally, we have `hideGroup()`. As its name implies, this function hides groups from the default selection. We decided that having all the seasons selected as default was a little overwhelming and cluttered, so one season (winter) was defined as the automatic selection.
 
-Finally, these functions are all put together in thecode below.
+These functions are all put together in the code below.
 
 (Note that we already created a map widget `japan_map` so we don't need to call leaflet() again.)
 ```{r}
@@ -261,3 +264,19 @@ quake_density
 
 
 ####V. Conclusion
+
+We have investigated many of the tools inside the data science toolkit in this tutorial. In order, we
+- tidied the data from the earthquakes dataset
+- used correlation tables to investigate the relationship between depth and magnitude
+- plotted these correlations (or lack thereof) 
+- created an interactive map with toggles that plotted earthquakes by season
+- created a heatmap of locations with higher earthquake risk
+
+After this tutorial, you can apply these skills to any dataset and any problem.
+
+For more information on data science, we have provided the following links:
+[Kaggle](kaggle.com)
+[Datacamp](https://www.datacamp.com/home)
+[r/datascience](https://www.reddit.com/r/datascience/)
+[Andrew Ng, cofounder of GoogleBrain, has a course on coursera](https://www.coursera.org/learn/machine-learning)
+
