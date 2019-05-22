@@ -5,22 +5,18 @@ output: html_document
 ##Table of Contents
 I. Introduction
 
-II. Problem
+II. Data
 
-III. Data
-
-IV. Analysis
+III. Analysis
 
   i. Statistical
 
   ii. Visual
 
-V. Conclusion
+IV. Conclusion
 
 
 ####I. Introduction
-
-####II. Problem
 
 As the name implies, natural disasters occur from events in nature and are beyond human control. While it is impossible for humans to directly prevent the course of Mother Nature, we can still analyze the patterns of natural events and their implications. 
 
@@ -101,6 +97,8 @@ ext_dat
 
 Now that we have the seasons, we can look at the correlation between an earthquake's depth and its season. We will do this using a correlation matrix. A correlation matrix is a table showing correlation coefficients between sets of variables. Each entry in the table is the random variable's correlation with each of the other values in the table. This allows you to see which pairs have the highest correlation.
 
+For each season, we filter the dataframe to its respective season, create columns [season]_depth and [season]_mag, and only select those columns in our final seasonal dataframe.
+
 ```{r cor btwn depth and each season}
 corr_spring <- ext_dat %>%
   filter(seasons == "spring") %>% 
@@ -125,12 +123,11 @@ cor(corr_fall)
 cor(corr_winter)
 ```
 
-The entries for (season_depth, season_mag) are called p-values. To generalize, the smaller a p-value is, the more correlated the two variables are. We will hold our threshold as p < 0.05, indicating that there is a less than 1 in 20 chance of being wrong. As the correlation table shows, spring and winter have a high correlation with depth, while summer and fall are less significant.
+As the correlation tables show, none of the seasons show a strong correlation between depth and magnitude. All the values are less than 0.7, the general threshold for correlation. 
 
-While it is nice to know this data, it would also be nice to have a visual representation of this.
+To further investigate, we can also present a visual representation of the correlation tables.
 
-
-```{r plotting}
+```{r plotting, warning=FALSE, message=FALSE}
 #show in plots what kind of relation it has
 attach(corr_spring)
 plot(spring_mag, spring_depth, main = "Correlation  Spring", pch = 19)
@@ -141,8 +138,10 @@ plot(fall_mag, fall_depth, main = "Correlation  fall", pch = 19)
 attach(corr_winter)
 plot(winter_mag, winter_depth, main = "Correlation  winter", pch = 19)
 ```
+While the correlations are nonlinear, we can see a slight pattern across seasons; only the relatively shallow depths seem to extend into the higher magnitude earthquakes. With the exception of summer, most earthquakes above magnitude 7 are above 300 feet deep. 
 
-While analyzing earthquakes by season was a good exercise in data mutation and correlation testing, it didn't turn out to be very useful. Instead we will try another analysis on magnitude that will hopefully yield more useful findings. To do this, we turn to the `mag` and `depth` columns. 
+
+While this was a good exercise in data mutation and correlation testing, it didn't lead to a clear conclusion. We will try another analysis on magnitude that will hopefully yield more declarative findings. To do this, we turn to the `mag` and `depth` columns. 
 
 Researchers have found that stronger earthquakes occur at shallower depths, while small earthquakes tend to range more in their depths. For further discussion, interested readers may find [this link](https://www.openhazards.com/faq/earthquakes-faults-plate-tectonics-earth-structure-user-submitted-questions/there-correlation) helpful.
 
@@ -150,6 +149,7 @@ Researchers have found that stronger earthquakes occur at shallower depths, whil
 attach(ext_dat)
 plot(depth, mag, main = "mag vs depth", pch = 19)
 ```
+
 Our plot fits the hypothesis perfectly. Earthquakes with the most magnitude are clustered at shallower depths while shorter earthquakes roam more freely, though there seems to be a slight cluster at the [300,500] range.
 
 ####IV-ii. Analysis -- Visual
@@ -261,24 +261,3 @@ quake_density
 
 
 ####V. Conclusion
-
-
-TODO: 
-1. correlation btwn depth and mag
-2. hypothesis (mag sec1 = sec2 = sec3 = sec4)
-3. ANOVA test to see the means of 'mb' 'mww' 'mwr' of mag are different
-4. conclude with words
-5. map to show the visual result to support our test 
-
-
-so far, we did correlation, r test. that shows there some correlation exist between depth and each season. we found all of seasons have some form of correlation with depth.
-
----skip for now---
-(now, we see if there is a linear relation btwn them. (Im sure we will find it), so now we can conclude that there is a linear relation exist btwn two. so, we can conclude that as depth goes deeper, the magnitude gets higher. )
-
-now, we want to see if each season has the same mean of magnitude. so we conduct ANOVA test to see it. (hypothesis: all means are the same).
-then derive the conclusion according to the result. 
-(if the null is rejected, then say there are no differences by season, 
- if not rejected, then we say there are some differences by season)
-
-lastly, show the map of earthquake by seasons.
